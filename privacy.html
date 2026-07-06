@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Privacy Policy — BrickRace Music Store</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;padding:24px;background:#f7fafc;color:#0f172a}
+    .container{max-width:900px;margin:0 auto;background:white;padding:28px;border-radius:8px;box-shadow:0 6px 18px rgba(2,6,23,0.08)}
+    h1,h2{color:#0f172a}
+    p{line-height:1.6}
+    .muted{color:#64748b;font-size:0.95rem}
+    a{color:#0b69ff}
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>Privacy Policy</h1>
+    <p class="muted">Effective date: July 6, 2026</p>
+
+    <p>This Privacy Policy explains how the BrickRace Music Store (the "Service"), operated by the BrickRace project, collects, uses, and shares information when you use the web admin tools and when the BrickRace game accesses store data. This page covers uploads you make via the admin interface and how the mobile app accesses that data.</p>
+
+    <h2>Information We Collect</h2>
+    <h3>Files and metadata</h3>
+    <p>When an administrator or contributor uploads music files, lyrics, or other media through the Music Store web interface, the Service stores the file and basic metadata (file name, size, upload timestamp, category). Uploaded files are stored in cloud storage (Dropbox or Firebase Storage depending on configuration) and links or metadata are saved to the Firebase Realtime Database.</p>
+
+    <h3>Authentication information</h3>
+    <p>If you sign in to the admin web interface, we use Firebase Authentication to validate your identity. We do not store raw credentials on this site; authentication is handled by Firebase. The Service may store your user ID and display name as part of upload metadata for audit purposes.</p>
+
+    <h3>Usage data</h3>
+    <p>We collect basic usage and log information necessary to run the web admin interface and to debug problems (timestamps, IP addresses, browser user-agent strings, and actions such as uploads and deletes). We may also collect analytics-level events if configured.</p>
+
+    <h2>How We Use Your Data</h2>
+    <ul>
+      <li>Store and serve uploaded audio and lyric files to the BrickRace mobile app via cloud storage and the Realtime Database.</li>
+      <li>Maintain an audit trail of uploads and removals so admins can manage content.</li>
+      <li>Debug and improve the Service, and monitor for abuse.</li>
+    </ul>
+
+    <h2>Third-Party Services</h2>
+    <p>The Service uses the following third-party providers:</p>
+    <ul>
+      <li><strong>Firebase</strong> — Authentication, Realtime Database and (optionally) Storage. Please review Firebase's privacy documentation for details about how they process information.</li>
+      <li><strong>Dropbox</strong> — Optional storage and file hosting for uploaded media (if configured). Uploaded files may be stored in the connected Dropbox account.</li>
+    </ul>
+
+    <h2>Sharing and Disclosure</h2>
+    <p>Uploaded files and their public share links (if generated) are accessible by anyone with the link. The BrickRace mobile app reads file metadata and download links from the Firebase Realtime Database to present store items to players. We do not sell your personal data.</p>
+
+    <h2>Data Retention</h2>
+    <p>Files and metadata remain stored until an admin deletes them. Backup and retention policies depend on the configured cloud storage provider (Dropbox/Firebase). You can request deletion using the contact details below.</p>
+
+    <h2>Security</h2>
+    <p>We take reasonable steps to protect uploaded files and metadata. Access to administrative operations should be restricted to authorized users. However, no internet service is perfectly secure — please avoid uploading sensitive personal data.</p>
+
+    <h2>Children</h2>
+    <p>The Service is not intended for children under 13. We do not knowingly collect personal information from children under 13. If you believe such information has been uploaded, contact us and we will remove it.</p>
+
+    <h2>Your Choices</h2>
+    <ul>
+      <li><strong>Access or deletion:</strong> Contact the administrator (see below) to request access or removal of uploaded files or metadata.</li>
+      <li><strong>Opt-out:</strong> If you do not want uploaded files to be publicly available, do not provide public share links when uploading. Use private storage options in your cloud provider.</li>
+    </ul>
+
+    <h2>Changes to this Policy</h2>
+    <p>We may update this Privacy Policy from time to time. We will post the revised policy on this page with a new effective date.</p>
+
+    <h2>Contact</h2>
+    <p>If you have questions or want to request removal of uploaded content, contact: <a href="mailto:support@yourdomain.com">support@yourdomain.com</a></p>
+
+    <hr />
+    <p class="muted">Notes: This document is provided as a standard privacy policy template tailored to the BrickRace Music Store project. It is not legal advice. For formal compliance (e.g., GDPR, CCPA), consider consulting a legal professional.</p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,5 @@
+in the drawable section, when user
+ click on music button, music 
+ player screen open and scan list 
+ of music in the user device and be able to open music store (store  information are stored inthe firebase databse) that was uploaded by admin (C:\Users\User PC\Documents\degreartcode data\BrickRaceMusicStore), when user select music, user can decide to play song at the background while playing game. user can also download song and its lyrics, user can also  play 
+game with the lyrics of a music.

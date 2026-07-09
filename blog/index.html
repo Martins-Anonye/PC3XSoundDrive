@@ -1,0 +1,26 @@
+---
+layout: default
+title: BrickRace Blog
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ page.title }}</title>
+</head>
+<body>
+  <main>
+    <h1>BrickRace Blog</h1>
+    <p>These posts are ready for GitHub Pages and Jekyll.</p>
+    {% for post in site.posts %}
+    <article>
+      <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+      <p>{{ post.excerpt | strip_html }}</p>
+      <small>{{ post.date | date: "%B %d, %Y" }}</small>
+    </article>
+    {% endfor %}
+  </main>
+</body>
+</html>

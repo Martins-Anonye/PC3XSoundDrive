@@ -1,0 +1,10 @@
+title: BrickRace Music Store
+name: BrickRace Music Store
+description: A music-focused storefront with blog content, creator updates, and community stories.
+baseurl: ""
+url: ""
+markdown: kramdown
+permalink: /posts/:year/:month/:day/:title/
+collections:
+  posts:
+    output: true

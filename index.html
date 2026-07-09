@@ -3,23 +3,316 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudVault - File Upload Manager</title>
+    <title>BrickRace Music Store</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .auth-panel {
+            display: flex;
+            justify-content: center;
+            padding: 24px;
+            background: linear-gradient(135deg, #eff6ff, #f8fafc);
+            min-height: 100vh;
+        }
+        .auth-card {
+            max-width: 560px;
+            width: 100%;
+        }
+        .auth-form-grid {
+            display: grid;
+            gap: 12px;
+        }
+        .auth-form-grid input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        .auth-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .auth-actions button {
+            flex: 1;
+            min-width: 140px;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .auth-actions .primary-btn {
+            background: #2563eb;
+            color: white;
+        }
+        .auth-actions .secondary-btn {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+        .auth-actions .google-btn {
+            background: white;
+            color: #111827;
+            border: 1px solid #cbd5e1;
+        }
+        .dashboard-grid {
+            display: grid;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .store-list {
+            display: grid;
+            gap: 10px;
+        }
+        .store-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #fcfdff;
+        }
+        .store-item strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+        .store-item small {
+            color: #64748b;
+        }
+        .tag {
+            display: inline-flex;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            margin-top: 6px;
+        }
+        .store-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .store-controls input,
+        .store-controls select {
+            min-width: 180px;
+            padding: 8px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+        }
+        .store-highlights {
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+        .store-highlight-card {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #dbeafe;
+            background: linear-gradient(135deg, #f8fbff, #eef6ff);
+        }
+        .store-highlight-card strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+        .store-favorites {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .store-favorite-chip {
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #fef3c7;
+            color: #92400e;
+            font-size: 0.85rem;
+        }
+        .store-list {
+            display: grid;
+            gap: 10px;
+        }
+        .store-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #fcfdff;
+        }
+        .store-item strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+        .store-item small {
+            color: #64748b;
+        }
+        .store-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .store-pill {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+        .store-desc {
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .store-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .store-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .store-action.secondary {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+        .store-action.ghost {
+            background: transparent;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+            padding: 7px 11px;
+        }
+        .store-action.favorite.active {
+            background: #f59e0b;
+            color: white;
+        }
+        .store-cover {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        .lyrics-preview {
+            margin-top: 8px;
+            padding: 8px 10px;
+            background: #f8fafc;
+            border-radius: 8px;
+            color: #475569;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            border: 1px solid #e2e8f0;
+        }
+        .ad-slot {
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px dashed #cbd5e1;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .blog-posts {
+            display: grid;
+            gap: 10px;
+        }
+        .blog-post-card {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            background: #fcfdff;
+        }
+        .blog-post-card strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+        .blog-post-card small {
+            color: #64748b;
+        }
+        .score-history-list {
+            display: grid;
+            gap: 10px;
+        }
+        .score-history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+        .score-history-item strong {
+            display: block;
+        }
+        .no-user-note {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        .danger-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <!-- Auth handled in separate auth.html -->
     <!-- Debug: Show loading/auth status -->
-    <div id="authStatus" style="display: block; position: fixed; top: 20px; right: 20px; padding: 12px; background: #f0f0f0; border-radius: 6px; font-size: 12px; z-index: 10000; max-width: 300px;">
-        <div style="font-weight: 600; margin-bottom: 8px;">🔄 Checking authentication...</div>
-        <div id="authStatusText" style="color: #666; font-size: 11px; line-height: 1.4;">Verifying credentials...</div>
+    <div id="authStatus" style="display: none; position: fixed; top: 20px; right: 20px; padding: 12px; background: #f0f0f0; border-radius: 6px; font-size: 12px; z-index: 10000; max-width: 300px;">
+        <div id="authStatusText" style="color: #666; font-size: 11px; line-height: 1.4;">Hidden</div>
+    </div>
+
+    <div id="authPanel" class="auth-panel" style="display: none;">
+        <div class="card auth-card">
+            <div class="card-header">
+                <h2>🔐 BrickRace Music Store</h2>
+            </div>
+            <div class="card-body">
+                <div class="auth-form-grid">
+                    <input type="email" id="authEmail" placeholder="Email address" />
+                    <input type="password" id="authPassword" placeholder="Password" />
+                    <div class="auth-actions">
+                        <button id="loginBtn" class="primary-btn">Log In</button>
+                        <button id="createAccountBtn" class="secondary-btn">Create Account</button>
+                        <button id="googleSignInBtn" class="google-btn">Continue with Google</button>
+                    </div>
+                    <div id="authMessage" class="no-user-note">Use your account to browse songs, download music, and review your score history.</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Main App Container -->
-    <div id="mainContainer" class="main-container" style="display: none;">
+    <div id="mainContainer" class="main-container" style="display: block;">
         <!-- Sidebar Navigation (optional future use) -->
         <nav class="sidebar">
             <div class="sidebar-header">
-                <div class="logo">☁️ CloudVault</div>
+                <div class="logo">BrickRace</div>
             </div>
             <div class="sidebar-user">
                 <div class="user-avatar">👤</div>
@@ -35,10 +328,82 @@
             <!-- Header -->
             <header class="app-header">
                 <div class="header-content">
-                    <h1>File Upload Manager</h1>
-                    <p>Securely upload and manage your files with Dropbox + Firebase</p>
+                    <h1>BrickRace Music Store</h1>
+                    <p>Browse songs, save your score history, and request account deletion</p>
                 </div>
             </header>
+
+            <div id="userDashboard" class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>🎵 Music Store</h2>
+                        <div class="store-controls">
+                            <input id="storeSearch" type="text" placeholder="Search songs, artists, or moods" />
+                            <select id="storeGenreFilter">
+                                <option value="all">All genres</option>
+                                <option value="hip-hop">Hip-Hop</option>
+                                <option value="rock">Rock</option>
+                                <option value="jazz">Jazz</option>
+                                <option value="lo-fi">Lo-Fi</option>
+                                <option value="electro">Electro</option>
+                                <option value="pop">Pop</option>
+                                <option value="indie">Indie</option>
+                            </select>
+                            <select id="storeSort">
+                                <option value="featured">Featured</option>
+                                <option value="title">Title</option>
+                                <option value="artist">Artist</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="storeStatus" class="no-user-note">Loading store catalog...</div>
+                        <div id="storeHighlights" class="store-highlights" style="margin-top: 12px;"></div>
+                        <div id="storeFavorites" class="store-favorites" style="margin-top: 12px;"></div>
+                        <div id="storeList" class="store-list" style="margin-top: 12px;"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>📈 My Score History</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="auth-form-grid" style="margin-bottom: 12px;">
+                            <input id="scoreInput" type="number" min="0" step="1" placeholder="Enter your score" />
+                            <input id="scoreSongInput" type="text" placeholder="Song or challenge name" />
+                            <button id="saveScoreBtn" class="upload-btn">Save Score</button>
+                        </div>
+                        <div id="scoreHistoryList" class="score-history-list">
+                            <div class="empty-state">No score history yet</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>� Music & Culture Blog</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="ad-slot">AdSense-ready content slot • sponsored placements can go here</div>
+                        <div id="blogPostsList" class="blog-posts"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>�🗑️ Account Deletion Request</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="auth-form-grid">
+                            <textarea id="deleteRequestReason" rows="4" placeholder="Tell us why you want your account and data removed" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;"></textarea>
+                            <button id="requestDeletionBtn" class="danger-btn">Request Account & Data Deletion</button>
+                            <div id="deleteRequestStatus" class="no-user-note">Your request will be stored for review and handled according to policy.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- Content Grid -->
             <div class="content-wrapper">
@@ -89,13 +454,42 @@
                                     <span class="type-icon">🎥</span>
                                     <span class="type-label">Video</span>
                                 </button>
+                                <button class="file-type-btn" data-type="audio" title="Music Tracks">
+                                    <span class="type-icon">🎵</span>
+                                    <span class="type-label">Audio</span>
+                                </button>
+                                <button class="file-type-btn" data-type="lyrics" title="Lyrics Files">
+                                    <span class="type-icon">📝</span>
+                                    <span class="type-label">Lyrics</span>
+                                </button>
                             </div>
-                            
+
+                            <div style="margin-top: 20px;">
+                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #1e293b;">🎼 Song Title</label>
+                                <input type="text" id="songTitleInput" placeholder="Optional title for store catalog" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+                            </div>
+                            <div style="margin-top: 12px;">
+                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #1e293b;">🎤 Artist Name</label>
+                                <input type="text" id="songArtistInput" placeholder="Optional artist name" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+                            </div>
+                             
                             <!-- Ads Redirect Link Input -->
                             <div style="margin-top: 20px;">
                                 <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #1e293b;">🔗 Ads Redirect Link (Optional)</label>
                                 <input type="url" id="adsRedirectLink" placeholder="https://example.com/redirect" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
                                 <p style="font-size: 12px; color: #64748b; margin-top: 6px;">Enter the URL where users should be redirected when they click on this ad</p>
+                            </div>
+
+                            <div style="margin-top: 16px;">
+                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #1e293b;">🖼️ Cover Image (Optional)</label>
+                                <button type="button" id="pickCoverBtn" class="upload-btn" style="padding: 8px 12px;">Choose cover image</button>
+                                <input type="file" id="coverImageInput" accept="image/jpeg,image/png,image/gif,image/webp" style="display: none;">
+                                <div id="coverName" class="no-user-note" style="margin-top: 8px;">No cover image selected</div>
+                            </div>
+
+                            <div style="margin-top: 16px;">
+                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #1e293b;">🎤 Lyrics / Notes</label>
+                                <textarea id="lyricsInput" rows="5" placeholder="Add lyrics, notes, or a short story for this track" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;"></textarea>
                             </div>
 
                             <!-- Expiration Input -->
@@ -181,8 +575,12 @@
                     </div>
                 </div>
             </div>
-            <div style="margin-top: 16px; text-align: center; color: #64748b; font-size: 14px;">
+            <div style="margin-top: 16px; text-align: center; color: #64748b; font-size: 14px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
                 <a href="privacy.html" target="_blank" style="color: #0b69ff; text-decoration: none;">Privacy Policy</a>
+                <a href="terms.html" target="_blank" style="color: #0b69ff; text-decoration: none;">Terms & Conditions</a>
+                <a href="contact.html" target="_blank" style="color: #0b69ff; text-decoration: none;">Contact</a>
+                <a href="about.html" target="_blank" style="color: #0b69ff; text-decoration: none;">About</a>
+                <a href="cookies.html" target="_blank" style="color: #0b69ff; text-decoration: none;">Cookies</a>
             </div>
         </div>
     </div>
@@ -193,7 +591,7 @@
     <!-- Single merged logic block: Auth, Upload, Dropbox, Firebase, UI -->
     <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+    import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
     import { getDatabase, ref, push, set, get, remove } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
     import { getValidDropboxToken, initiateOAuthLogin, clearDropboxTokens } from './dropbox-oauth-handler.js';
     import NAVIGATION_CONFIG from './navigation-config.js';
@@ -217,9 +615,14 @@ const firebaseConfig = {
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
+    const googleProvider = new GoogleAuthProvider();
+    googleProvider.setCustomParameters({ prompt: 'select_account' });
 
     // DOM Elements
+    const authPanel = document.getElementById('authPanel');
     const mainContainer = document.getElementById('mainContainer');
+    const authStatus = document.getElementById('authStatus');
+    const authStatusText = document.getElementById('authStatusText');
     const userEmailSpan = document.getElementById('userEmail');
     const signOutBtn = document.getElementById('signOutBtn');
     const uploadBox = document.getElementById('uploadBox');
@@ -233,63 +636,594 @@ const firebaseConfig = {
     const saveTextAdBtn = document.getElementById('saveTextAdBtn');
     const textAdSection = document.getElementById('textAdSection');
     const fileTypeButtons = document.querySelectorAll('.file-type-btn');
+    const authEmailInput = document.getElementById('authEmail');
+    const authPasswordInput = document.getElementById('authPassword');
+    const loginBtn = document.getElementById('loginBtn');
+    const createAccountBtn = document.getElementById('createAccountBtn');
+    const googleSignInBtn = document.getElementById('googleSignInBtn');
+    const authMessage = document.getElementById('authMessage');
+    const storeSearchInput = document.getElementById('storeSearch');
+    const storeGenreFilter = document.getElementById('storeGenreFilter');
+    const storeSortSelect = document.getElementById('storeSort');
+    const storeList = document.getElementById('storeList');
+    const storeStatus = document.getElementById('storeStatus');
+    const storeHighlights = document.getElementById('storeHighlights');
+    const storeFavorites = document.getElementById('storeFavorites');
+    const pickCoverBtn = document.getElementById('pickCoverBtn');
+    const coverImageInput = document.getElementById('coverImageInput');
+    const coverName = document.getElementById('coverName');
+    const lyricsInput = document.getElementById('lyricsInput');
+    const blogPostsList = document.getElementById('blogPostsList');
+    const scoreInput = document.getElementById('scoreInput');
+    const scoreSongInput = document.getElementById('scoreSongInput');
+    const saveScoreBtn = document.getElementById('saveScoreBtn');
+    const scoreHistoryList = document.getElementById('scoreHistoryList');
+    const userDashboard = document.getElementById('userDashboard');
+    const adminDashboard = document.getElementById('adminDashboard');
+    const adminScoreCard = document.getElementById('adminScoreCard');
+    const adminScoreFilter = document.getElementById('adminScoreFilter');
+    const adminScoreList = document.getElementById('adminScoreList');
+    const deleteRequestReason = document.getElementById('deleteRequestReason');
+    const requestDeletionBtn = document.getElementById('requestDeletionBtn');
+    const deleteRequestStatus = document.getElementById('deleteRequestStatus');
+    const songTitleInput = document.getElementById('songTitleInput');
+    const songArtistInput = document.getElementById('songArtistInput');
+    const uploadCard = document.querySelector('.upload-card');
+    const fileTypesCard = document.querySelector('.file-types-card');
+    const queueCard = document.querySelector('.queue-card');
+    const resultsCard = document.querySelector('.results-card');
+    const databaseCard = document.querySelector('.database-card');
     let selectedFiles = [];
     let selectedFileType = 'all';
+    let currentUser = null;
+    let currentUserMode = 'user';
+    let storeSongs = [];
+    let favoriteSongIds = new Set(JSON.parse(localStorage.getItem('brickrace_favorites') || '[]'));
+    let pendingCoverFile = null;
+    const blogPosts = [
+        { title: 'New beats for the BrickRace community', category: 'Music', excerpt: 'Fresh releases, live sets, and behind-the-scenes stories for creators and listeners.' },
+        { title: 'A simple creator workflow for artists', category: 'Tips', excerpt: 'How to publish songs, artwork, and notes in one place without losing momentum.' },
+        { title: 'Why long-form content still matters', category: 'Culture', excerpt: 'Narrative posts, updates, and lifestyle stories create deeper audience loyalty.' }
+    ];
 
-    // Auth logic
-    function showMainFor(email) {
+    function getStoreGenre(song) {
+        const text = `${song.title || ''} ${song.artist || ''} ${song.fileName || ''}`.toLowerCase();
+        if (text.includes('hip') || text.includes('rap') || text.includes('trap')) return 'Hip-Hop';
+        if (text.includes('rock') || text.includes('alt')) return 'Rock';
+        if (text.includes('jazz') || text.includes('blues')) return 'Jazz';
+        if (text.includes('lofi') || text.includes('chill')) return 'Lo-Fi';
+        if (text.includes('edm') || text.includes('dance') || text.includes('electro')) return 'Electro';
+        if (text.includes('pop') || text.includes('synth')) return 'Pop';
+        return 'Indie';
+    }
+
+    function getStoreMood(song) {
+        const text = `${song.title || ''} ${song.artist || ''} ${song.fileName || ''}`.toLowerCase();
+        if (text.includes('chill') || text.includes('lofi') || text.includes('sleep')) return 'Chill';
+        if (text.includes('battle') || text.includes('race') || text.includes('energy')) return 'Energy';
+        if (text.includes('night') || text.includes('dark')) return 'Night';
+        if (text.includes('jazz') || text.includes('soul')) return 'Soul';
+        return 'Fresh';
+    }
+
+    function getStorePrice(song, index) {
+        return (1.99 + (index % 3) * 0.5).toFixed(2);
+    }
+
+    function persistFavorites() {
+        localStorage.setItem('brickrace_favorites', JSON.stringify([...favoriteSongIds]));
+    }
+
+    function toggleFavorite(songId) {
+        if (favoriteSongIds.has(songId)) {
+            favoriteSongIds.delete(songId);
+        } else {
+            favoriteSongIds.add(songId);
+        }
+        persistFavorites();
+        renderStoreCatalog();
+    }
+
+    function renderStoreHighlights(songs) {
+        if (!storeHighlights) return;
+        const featured = songs.slice(0, 3);
+        if (!featured.length) {
+            storeHighlights.innerHTML = '<div class="empty-state">Featured songs will appear here as soon as the catalog grows.</div>';
+            return;
+        }
+        storeHighlights.innerHTML = featured.map(song => `
+            <div class="store-highlight-card">
+                <strong>${song.title}</strong>
+                <small>${song.artist}</small>
+                <div class="store-desc">${song.lyricsAvailable ? 'Includes lyrics and a download-ready pack.' : 'Fresh release with a quick-download experience.'}</div>
+            </div>
+        `).join('');
+    }
+
+    function renderStoreFavorites() {
+        if (!storeFavorites) return;
+        const favorites = storeSongs.filter(song => favoriteSongIds.has(song.id));
+        if (!favorites.length) {
+            storeFavorites.innerHTML = '';
+            return;
+        }
+        storeFavorites.innerHTML = `<div class="no-user-note">Your favorites</div>${favorites.slice(0, 6).map(song => `<span class="store-favorite-chip">${song.title}</span>`).join('')}`;
+    }
+
+    function setAuthMessage(message, isError = false) {
+        if (!authMessage) return;
+        authMessage.innerHTML = message;
+        authMessage.style.color = isError ? '#dc2626' : '#475569';
+    }
+
+    function showAuthPanel(message = '', isError = false) {
+        if (authPanel) authPanel.style.display = 'flex';
+        if (mainContainer) mainContainer.style.display = 'none';
+        if (authStatus) authStatus.style.display = 'none';
+        if (authStatusText) authStatusText.textContent = 'Hidden';
+        setAuthMessage(message || 'Use your account to browse songs, download music, and review your score history.', isError);
+    }
+
+    function showPublicStore(message = '') {
+        if (authPanel) authPanel.style.display = 'none';
+        if (mainContainer) mainContainer.style.display = 'block';
+        if (authStatus) authStatus.style.display = 'none';
+        if (authStatusText) {
+            authStatusText.innerHTML = 'Hidden';
+        }
+        if (userEmailSpan) userEmailSpan.textContent = 'Guest browsing';
+        if (signOutBtn) {
+            signOutBtn.textContent = 'Sign In';
+            signOutBtn.style.display = 'inline-block';
+        }
+        currentUserMode = 'user';
+        if (userDashboard) userDashboard.style.display = 'grid';
+        if (adminDashboard) adminDashboard.style.display = 'none';
+        if (uploadCard) uploadCard.style.display = 'none';
+        if (fileTypesCard) fileTypesCard.style.display = 'none';
+        if (queueCard) queueCard.style.display = 'none';
+        if (resultsCard) resultsCard.style.display = 'none';
+        if (databaseCard) databaseCard.style.display = 'none';
+        if (uploadBtn) uploadBtn.disabled = true;
+        loadStoreCatalog();
+        loadUserScoreHistory();
+        loadAdminScoreHistory();
+    }
+
+    async function ensureUserProfile(user) {
+        if (!user) return;
+        const profileRef = ref(db, `users/${user.uid}/profile`);
+        const snapshot = await get(profileRef);
+        if (!snapshot.exists()) {
+            await set(profileRef, {
+                email: user.email || '',
+                createdAt: new Date().toISOString()
+            });
+        }
+    }
+
+    async function loadStoreCatalog() {
+        if (!storeList || !storeStatus) return;
+        storeStatus.textContent = 'Loading store catalog...';
+        try {
+            const [audioSnap, lyricsSnap] = await Promise.all([
+                get(ref(db, 'ads/audio')),
+                get(ref(db, 'ads/lyrics'))
+            ]);
+
+            const audioItems = audioSnap.exists() ? Object.entries(audioSnap.val()) : [];
+            const lyricsItems = lyricsSnap.exists() ? Object.entries(lyricsSnap.val()) : [];
+            const lyricsLookup = new Map();
+            lyricsItems.forEach(([key, item]) => {
+                const fileName = item?.fileName || '';
+                const baseName = fileName.replace(/\.[^.]+$/, '').toLowerCase();
+                lyricsLookup.set(baseName, item);
+            });
+
+            storeSongs = audioItems
+                .map(([key, item]) => {
+                    const fileName = item?.fileName || 'Unknown song';
+                    const baseName = fileName.replace(/\.[^.]+$/, '').toLowerCase();
+                    const title = item?.title || item?.songTitle || fileName.replace(/\.[^.]+$/, '');
+                    const artist = item?.artist || item?.songArtist || 'BrickRace';
+                    const shareLink = item?.shareLink || item?.downloadUrl || '';
+                    const lyricsText = item?.lyrics || '';
+                    return {
+                        id: key,
+                        title,
+                        artist,
+                        fileName,
+                        shareLink,
+                        coverUrl: item?.coverUrl || '',
+                        lyrics: lyricsText,
+                        lyricsAvailable: Boolean(lyricsText || lyricsLookup.get(baseName))
+                    };
+                })
+                .sort((a, b) => a.title.localeCompare(b.title));
+
+            renderStoreCatalog();
+        } catch (error) {
+            console.error('[STORE] Could not load songs', error);
+            storeStatus.textContent = 'Unable to load songs right now.';
+            storeList.innerHTML = '<div class="empty-state">Unable to load songs right now.</div>';
+        }
+    }
+
+    function renderBlogPosts() {
+        if (!blogPostsList) return;
+        blogPostsList.innerHTML = blogPosts.map(post => `
+            <div class="blog-post-card">
+                <strong>${post.title}</strong>
+                <small>${post.category}</small>
+                <div class="store-desc">${post.excerpt}</div>
+            </div>
+        `).join('');
+    }
+
+    function renderStoreCatalog() {
+        if (!storeList) return;
+        const search = (storeSearchInput?.value || '').trim().toLowerCase();
+        const genreFilter = (storeGenreFilter?.value || 'all').toLowerCase();
+        const sortMode = storeSortSelect?.value || 'featured';
+        const filteredSongs = storeSongs.filter(song => {
+            const matchesSearch = !search || [song.title, song.artist, song.fileName, getStoreGenre(song), getStoreMood(song)].some(value => value.toLowerCase().includes(search));
+            const matchesGenre = genreFilter === 'all' || getStoreGenre(song).toLowerCase() === genreFilter;
+            return matchesSearch && matchesGenre;
+        });
+
+        let sortedSongs = [...filteredSongs];
+        if (sortMode === 'artist') {
+            sortedSongs.sort((a, b) => a.artist.localeCompare(b.artist));
+        } else if (sortMode === 'title') {
+            sortedSongs.sort((a, b) => a.title.localeCompare(b.title));
+        } else {
+            sortedSongs.sort((a, b) => (b.lyricsAvailable === a.lyricsAvailable ? 0 : b.lyricsAvailable ? 1 : -1));
+        }
+
+        renderStoreHighlights(sortedSongs);
+        renderStoreFavorites();
+
+        if (!sortedSongs.length) {
+            storeList.innerHTML = '<div class="empty-state">No songs match your search</div>';
+            storeStatus.textContent = storeSongs.length ? 'No songs match your search.' : 'No songs have been uploaded yet.';
+            return;
+        }
+
+        storeStatus.textContent = `Showing ${sortedSongs.length} song${sortedSongs.length === 1 ? '' : 's'}`;
+        storeList.innerHTML = sortedSongs.map((song, index) => `
+            <div class="store-item">
+                <div style="display:flex; gap: 12px; align-items:flex-start;">
+                    ${song.coverUrl ? `<img class="store-cover" src="${song.coverUrl}" alt="${song.title} cover">` : '<div class="store-cover" style="display:flex;align-items:center;justify-content:center;">🎵</div>'}
+                    <div>
+                        <strong>${song.title}</strong>
+                        <small>${song.artist}</small>
+                        <div class="store-desc">${song.fileName}</div>
+                        <div class="store-meta">
+                            <span class="store-pill">${getStoreGenre(song)}</span>
+                            <span class="store-pill">${getStoreMood(song)}</span>
+                            ${song.lyricsAvailable ? '<span class="store-pill">Lyrics included</span>' : '<span class="store-pill">Instrumental</span>'}
+                        </div>
+                        ${song.lyrics ? `<div class="lyrics-preview">${song.lyrics.slice(0, 140)}${song.lyrics.length > 140 ? '…' : ''}</div>` : ''}
+                    </div>
+                </div>
+                <div class="store-actions">
+                    <button class="store-action ghost favorite ${favoriteSongIds.has(song.id) ? 'active' : ''}" data-action="favorite" data-song-id="${song.id}">★</button>
+                    <button class="store-action secondary" data-action="preview" data-song-id="${song.id}">Preview</button>
+                    ${song.shareLink ? `<a class="store-action" data-action="download" href="${song.shareLink}" target="_blank" rel="noopener">Buy $${getStorePrice(song, index)}</a>` : '<span class="no-user-note">Link pending</span>'}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function loadUserScoreHistory() {
+        if (!scoreHistoryList) return;
+        if (!currentUser) {
+            scoreHistoryList.innerHTML = '<div class="empty-state">Sign in to save and view your score history.</div>';
+            return;
+        }
+        try {
+            const snapshot = await get(ref(db, `users/${currentUser.uid}/scoreHistory`));
+            const history = snapshot.exists() ? snapshot.val() : {};
+            const items = Object.entries(history).map(([key, entry]) => ({ key, ...entry }))
+                .sort((a, b) => new Date(b.recordedAt || 0) - new Date(a.recordedAt || 0));
+            if (!items.length) {
+                scoreHistoryList.innerHTML = '<div class="empty-state">No score history yet</div>';
+                return;
+            }
+            scoreHistoryList.innerHTML = items.map(item => `
+                <div class="score-history-item">
+                    <div>
+                        <strong>${item.songTitle || 'Untitled score'}</strong>
+                        <small>${new Date(item.recordedAt || Date.now()).toLocaleString()}</small>
+                    </div>
+                    <div style="font-weight: 700; color: #0f172a;">${item.score ?? 0}</div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('[SCORES] Could not load history', error);
+            scoreHistoryList.innerHTML = '<div class="empty-state">Unable to load score history</div>';
+        }
+    }
+
+    async function saveScoreHistory() {
+        if (!currentUser) {
+            showAuthPanel('Please sign in to save and view score history.', true);
+            return;
+        }
+        const score = Number(scoreInput?.value || 0);
+        const songTitle = scoreSongInput?.value.trim() || 'Quick play';
+        if (!Number.isFinite(score) || score < 0) {
+            setAuthMessage('Please enter a valid score.', true);
+            return;
+        }
+        const scoreRef = push(ref(db, `users/${currentUser.uid}/scoreHistory`));
+        await set(scoreRef, {
+            score,
+            songTitle,
+            recordedAt: new Date().toISOString(),
+            recordedBy: currentUser.email || ''
+        });
+        if (scoreInput) scoreInput.value = '';
+        if (scoreSongInput) scoreSongInput.value = '';
+        await loadUserScoreHistory();
+        await loadAdminScoreHistory();
+        setAuthMessage('Score saved to your history.');
+    }
+
+    async function loadAdminScoreHistory() {
+        if (!adminScoreCard || !adminScoreList) return;
+        if (currentUserMode !== 'admin') {
+            adminScoreCard.style.display = 'none';
+            return;
+        }
+        adminScoreCard.style.display = 'block';
+        try {
+            const snapshot = await get(ref(db, 'users'));
+            if (!snapshot.exists()) {
+                adminScoreList.innerHTML = '<div class="empty-state">No users have score history yet</div>';
+                return;
+            }
+            const rows = [];
+            const usersData = snapshot.val();
+            Object.entries(usersData || {}).forEach(([uid, userData]) => {
+                const profile = userData?.profile || {};
+                const history = userData?.scoreHistory || {};
+                Object.entries(history).forEach(([historyKey, entry]) => {
+                    rows.push({
+                        uid,
+                        historyKey,
+                        email: profile?.email || 'Unknown user',
+                        score: entry?.score ?? 0,
+                        songTitle: entry?.songTitle || 'Untitled score',
+                        recordedAt: entry?.recordedAt || ''
+                    });
+                });
+            });
+            const filterValue = (adminScoreFilter?.value || '').trim().toLowerCase();
+            const filteredRows = rows.filter(row => {
+                if (!filterValue) return true;
+                return [row.email, row.songTitle, String(row.score)].some(value => value.toLowerCase().includes(filterValue));
+            }).sort((a, b) => new Date(b.recordedAt || 0) - new Date(a.recordedAt || 0));
+
+            if (!filteredRows.length) {
+                adminScoreList.innerHTML = '<div class="empty-state">No score entries match your filter</div>';
+                return;
+            }
+
+            adminScoreList.innerHTML = filteredRows.map(row => `
+                <div class="score-history-item">
+                    <div>
+                        <strong>${row.songTitle}</strong>
+                        <small>${row.email}</small>
+                        <div style="font-size: 0.8rem; color: #64748b;">${row.recordedAt ? new Date(row.recordedAt).toLocaleString() : 'Unknown time'}</div>
+                    </div>
+                    <div style="font-weight: 700; color: #0f172a;">${row.score}</div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('[SCORES] Could not load admin history', error);
+            adminScoreList.innerHTML = '<div class="empty-state">Unable to load user score history</div>';
+        }
+    }
+
+    function showMainFor(email, isAdmin = false) {
         const authStatus = document.getElementById('authStatus');
         if (authStatus) authStatus.style.display = 'none';
         if (mainContainer) mainContainer.style.display = 'block';
+        if (authPanel) authPanel.style.display = 'none';
         if (userEmailSpan) userEmailSpan.textContent = `Signed in as: ${email}`;
-        if (signOutBtn) signOutBtn.style.display = 'inline-block';
-        if (signOutBtn && !signOutBtn._wired) {
-            signOutBtn.addEventListener('click', async () => {
-                try { await signOut(auth); } catch(e) { console.warn(e); }
-                clearDropboxTokens();
-                NAVIGATION_CONFIG.redirectToAuth();
-            });
-            signOutBtn._wired = true;
+        if (signOutBtn) {
+            signOutBtn.textContent = 'Sign Out';
+            signOutBtn.style.display = 'inline-block';
         }
+        currentUserMode = isAdmin ? 'admin' : 'user';
+        if (userDashboard) userDashboard.style.display = isAdmin ? 'none' : 'grid';
+        if (adminDashboard) adminDashboard.style.display = isAdmin ? 'grid' : 'none';
+        if (uploadCard) uploadCard.style.display = isAdmin ? 'block' : 'none';
+        if (fileTypesCard) fileTypesCard.style.display = isAdmin ? 'block' : 'none';
+        if (queueCard) queueCard.style.display = isAdmin ? 'block' : 'none';
+        if (resultsCard) resultsCard.style.display = isAdmin ? 'block' : 'none';
+        if (databaseCard) databaseCard.style.display = isAdmin ? 'block' : 'none';
+        if (uploadBtn) uploadBtn.disabled = !isAdmin;
+        loadStoreCatalog();
+        loadUserScoreHistory();
+        loadAdminScoreHistory();
     }
-    (async () => {
-        const params = new URLSearchParams(window.location.search);
-        const fromAuth = params.get('auth') === 'done';
-        const storedEmail = localStorage.getItem('cloudvault_user_email');
-        if (fromAuth && storedEmail === AUTHORIZED_EMAIL) {
-            try { 
-                localStorage.removeItem('cloudvault_user_email'); 
-                localStorage.removeItem('cloudvault_auth_attempt');
-                localStorage.removeItem('cloudvault_id_token');
-            } catch(_) {}
-            params.delete('auth'); params.delete('ts');
-            const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
-            history.replaceState(null, '', newUrl);
-            showMainFor(storedEmail);
+
+    async function handleAuthAction(mode) {
+        const email = (authEmailInput?.value || '').trim();
+        const password = authPasswordInput?.value || '';
+        if (!email || !password) {
+            setAuthMessage('Please enter both email and password.', true);
             return;
         }
-        onAuthStateChanged(auth, (user) => {
+        try {
+            let userCredential;
+            if (mode === 'login') {
+                userCredential = await signInWithEmailAndPassword(auth, email, password);
+            } else {
+                userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            }
+            currentUser = userCredential.user;
+            await ensureUserProfile(currentUser);
+            setAuthMessage('Signed in successfully.');
+        } catch (error) {
+            console.error('[AUTH] Failed', error);
+            setAuthMessage(error?.message || 'Authentication failed.', true);
+        }
+    }
+
+    if (loginBtn) {
+        loginBtn.addEventListener('click', () => handleAuthAction('login'));
+    }
+    if (createAccountBtn) {
+        createAccountBtn.addEventListener('click', () => handleAuthAction('create'));
+    }
+    if (googleSignInBtn) {
+        googleSignInBtn.addEventListener('click', async () => {
+            try {
+                const result = await signInWithPopup(auth, googleProvider);
+                currentUser = result.user;
+                await ensureUserProfile(currentUser);
+                setAuthMessage('Signed in with Google successfully.');
+            } catch (error) {
+                console.error('[AUTH] Google sign-in failed', error);
+                setAuthMessage(error?.message || 'Google sign-in failed.', true);
+            }
+        });
+    }
+    if (storeSearchInput) {
+        storeSearchInput.addEventListener('input', renderStoreCatalog);
+    }
+    if (storeGenreFilter) {
+        storeGenreFilter.addEventListener('change', renderStoreCatalog);
+    }
+    if (storeSortSelect) {
+        storeSortSelect.addEventListener('change', renderStoreCatalog);
+    }
+    if (storeList) {
+        storeList.addEventListener('click', (event) => {
+            const button = event.target.closest('[data-action]');
+            if (!button) return;
+            const action = button.getAttribute('data-action');
+            const songId = button.getAttribute('data-song-id');
+            const song = storeSongs.find(item => item.id === songId);
+            if (!song) return;
+            if (action === 'favorite') {
+                toggleFavorite(songId);
+                showToast(favoriteSongIds.has(songId) ? `Added ${song.title} to your favorites` : `Removed ${song.title} from your favorites`);
+            } else if (action === 'preview') {
+                if (song.shareLink) {
+                    window.open(song.shareLink, '_blank', 'noopener');
+                    showToast(`Previewing ${song.title}`);
+                } else {
+                    showToast('Preview will be available once a download link is ready.');
+                }
+            } else if (action === 'download') {
+                if (!currentUser) {
+                    event.preventDefault();
+                    showAuthPanel('Please sign in to download songs.', true);
+                    showToast('Sign in to download songs');
+                    return;
+                }
+                if (song.shareLink) {
+                    window.open(song.shareLink, '_blank', 'noopener');
+                    showToast(`Downloading ${song.title}`);
+                }
+            }
+        });
+    }
+    if (adminScoreFilter) {
+        adminScoreFilter.addEventListener('input', loadAdminScoreHistory);
+    }
+    if (pickCoverBtn && coverImageInput) {
+        pickCoverBtn.addEventListener('click', () => coverImageInput.click());
+    }
+    if (coverImageInput) {
+        coverImageInput.addEventListener('change', () => {
+            const file = coverImageInput.files && coverImageInput.files[0];
+            pendingCoverFile = file || null;
+            if (coverName) {
+                coverName.textContent = file ? `Selected: ${file.name}` : 'No cover image selected';
+            }
+        });
+    }
+    if (saveScoreBtn) {
+        saveScoreBtn.addEventListener('click', saveScoreHistory);
+    }
+    if (requestDeletionBtn) {
+        requestDeletionBtn.addEventListener('click', async () => {
+            if (!currentUser) {
+                if (deleteRequestStatus) {
+                    deleteRequestStatus.textContent = 'Please sign in before submitting a deletion request.';
+                    deleteRequestStatus.style.color = '#dc2626';
+                }
+                return;
+            }
+            const reason = (deleteRequestReason?.value || '').trim();
+            if (!reason) {
+                if (deleteRequestStatus) {
+                    deleteRequestStatus.textContent = 'Please provide a reason for the deletion request.';
+                    deleteRequestStatus.style.color = '#dc2626';
+                }
+                return;
+            }
+            try {
+                const requestRef = push(ref(db, 'deletionRequests'));
+                await set(requestRef, {
+                    uid: currentUser.uid,
+                    email: currentUser.email || '',
+                    reason,
+                    requestedAt: new Date().toISOString(),
+                    status: 'pending'
+                });
+                if (deleteRequestReason) deleteRequestReason.value = '';
+                if (deleteRequestStatus) {
+                    deleteRequestStatus.textContent = 'Your deletion request was submitted successfully.';
+                    deleteRequestStatus.style.color = '#10b981';
+                }
+            } catch (error) {
+                console.error('[DELETE] Request submission failed', error);
+                if (deleteRequestStatus) {
+                    deleteRequestStatus.textContent = 'Unable to submit your request right now.';
+                    deleteRequestStatus.style.color = '#dc2626';
+                }
+            }
+        });
+    }
+
+    if (signOutBtn && !signOutBtn._wired) {
+        signOutBtn.addEventListener('click', async () => {
+            if (!currentUser) {
+                showAuthPanel('Sign in to unlock downloads and your score history.', false);
+                return;
+            }
+            try { await signOut(auth); } catch(e) { console.warn(e); }
+            clearDropboxTokens();
+            showPublicStore('Signed out. You can still browse the store.');
+        });
+        signOutBtn._wired = true;
+    }
+
+    (async () => {
+        onAuthStateChanged(auth, async (user) => {
             const authStatus = document.getElementById('authStatus');
             const authStatusText = document.getElementById('authStatusText');
-            
             if (user) {
+                currentUser = user;
+                const isAdmin = user.email?.toLowerCase() === AUTHORIZED_EMAIL?.toLowerCase();
                 console.log('[Auth] User detected:', user.email);
-                if (user.email === AUTHORIZED_EMAIL) {
-                    console.log('[Auth] ✓ Authorized email');
-                    showMainFor(user.email);
-                } else {
-                    console.log('[Auth] ✗ Unauthorized email:', user.email);
-                    if (authStatusText) {
-                        authStatusText.innerHTML = `<span style="color: #ef4444;">⚠️ Unauthorized email: ${user.email}</span><br/>Expected: ${AUTHORIZED_EMAIL}`;
-                    }
-                    setTimeout(() => NAVIGATION_CONFIG.redirectToAuth(), 2000);
+                await ensureUserProfile(user);
+                showMainFor(user.email, isAdmin);
+                if (authStatusText) {
+                    authStatusText.innerHTML = 'Hidden';
                 }
             } else {
-                console.log('[Auth] No user - redirecting to auth');
+                currentUser = null;
+                showPublicStore('Browsing the store anonymously. Sign in to access downloads and score history.');
                 if (authStatusText) {
-                    authStatusText.innerHTML = `<span style="color: #f97316;">📝 Redirecting to login...</span>`;
+                    authStatusText.innerHTML = 'Hidden';
                 }
-                setTimeout(() => NAVIGATION_CONFIG.redirectToAuth(), 1500);
             }
         });
     })();
@@ -363,6 +1297,8 @@ const firebaseConfig = {
         });
     });
 
+    renderBlogPosts();
+
     // Simple toast helper
     function showToast(message, duration = 3000) {
         const container = document.getElementById('toastContainer');
@@ -420,6 +1356,28 @@ const firebaseConfig = {
             console.error('[UPLOAD]', err);
             uploadBtn.disabled = false;
             return;
+        }
+
+        let coverUploadUrl = '';
+        if (pendingCoverFile) {
+            try {
+                const coverPath = DROPBOX_CONFIG.getUploadPath('banner', pendingCoverFile.name);
+                const coverResponse = await fetch(DROPBOX_CONFIG.api.fileUpload, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${DROPBOX_ACCESS_TOKEN}`,
+                        'Dropbox-API-Arg': JSON.stringify({ path: coverPath, mode: 'add', autorename: true, mute: false }),
+                        'Content-Type': 'application/octet-stream'
+                    },
+                    body: pendingCoverFile
+                });
+                if (coverResponse.ok) {
+                    const coverData = await coverResponse.json();
+                    coverUploadUrl = `https://www.dropbox.com/scl/fi/${coverData.id || ''}`;
+                }
+            } catch (coverError) {
+                console.warn('[UPLOAD] Cover upload failed', coverError);
+            }
         }
 
         for (const file of selectedFiles) {
@@ -514,7 +1472,8 @@ const firebaseConfig = {
 
                 // Save to Firebase (only after Dropbox upload succeeds)
                 try {
-                    const fileRef = push(ref(db, `ads/${selectedFileType}`));
+                    const storagePath = selectedFileType === 'audio' ? 'ads/audio' : `ads/${selectedFileType}`;
+                    const fileRef = push(ref(db, storagePath));
 
                     // Capture adsRedirectLink value from input
                     const adsRedirectLink = adsRedirectLinkInput.value.trim();
@@ -526,14 +1485,25 @@ const firebaseConfig = {
                         expiresAt = new Date(Date.now() + expireDays * 86400000).toISOString();
                     }
 
+                    const title = (songTitleInput && songTitleInput.value.trim()) || file.name.replace(/\.[^.]+$/, '');
+                    const artist = (songArtistInput && songArtistInput.value.trim()) || 'BrickRace';
+                    const lyricsText = (lyricsInput && lyricsInput.value.trim()) || '';
                     const payload = {
                         fileName: file.name,
                         fileSize: file.size,
                         fileType: selectedFileType,
+                        title,
+                        artist,
+                        category: selectedFileType,
                         dropboxPath: dropboxPath,
                         shareLink: shareLink || '',
+                        downloadUrl: shareLink || '',
                         adsRedirectLink: adsRedirectLink,
-                        uploadedAt: new Date().toISOString()
+                        uploadedAt: new Date().toISOString(),
+                        uploadedBy: currentUser?.email || 'admin',
+                        coverUrl: coverUploadUrl,
+                        lyrics: lyricsText,
+                        description: lyricsText || `A new release from ${artist}`
                     };
                     if (expiresAt) payload.expiresAt = expiresAt;
 

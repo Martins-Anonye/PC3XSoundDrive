@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BrickRace Admin Panel</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        body { margin: 0; background: #f8fafc; font-family: Arial, sans-serif; }
+        .page { padding: 24px; }
+        .card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 12px; }
+        .grid { display: grid; gap: 16px; }
+        .auth-form-grid { display: grid; gap: 12px; }
+        input, textarea, button { font: inherit; }
+        input, textarea { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; }
+        button { padding: 10px 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .primary { background: #2563eb; color: white; }
+        .secondary { background: #e2e8f0; color: #0f172a; }
+        .danger { background: #dc2626; color: white; }
+        .muted { color: #64748b; }
+        .pill { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #dbeafe; color: #1d4ed8; font-size: 0.8rem; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="card">
+            <div class="header">
+                <div>
+                    <h1>BrickRace Admin Panel</h1>
+                    <p class="muted">Manage uploads, review score history, and handle deletion requests.</p>
+                </div>
+                <a href="index.html" style="text-decoration:none; color:#2563eb; font-weight:600;">Go to User Page</a>
+            </div>
+        </div>
+
+        <div id="authGate" class="card">
+            <h2>🔐 Admin Sign In</h2>
+            <p class="muted">Only authorized admins can access this area.</p>
+            <div class="auth-form-grid">
+                <input id="adminEmail" type="email" placeholder="Admin email" />
+                <input id="adminPassword" type="password" placeholder="Admin password" />
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button id="adminLoginBtn" class="primary">Sign In</button>
+                    <button id="adminGoogleBtn" class="secondary">Continue with Google</button>
+                    <button id="adminSignOutBtn" class="danger hidden">Sign Out</button>
+                </div>
+                <div id="adminMessage" class="muted">Please sign in with the authorized admin account.</div>
+            </div>
+        </div>
+
+        <div id="adminContent" class="hidden">
+            <div class="card">
+                <h2>🧑‍🤝‍🧑 User Score History</h2>
+                <input id="adminScoreFilter" type="text" placeholder="Filter by email, song, or score" />
+                <div id="adminScoreList" class="grid" style="margin-top: 12px;"></div>
+            </div>
+
+            <div class="card">
+                <h2>🗑️ Deletion Requests</h2>
+                <div id="deletionRequestsList" class="grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+    import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+    import { AUTHORIZED_EMAIL } from './auth-config.js';
+
+    const firebaseConfig = {
+        apiKey: 'AIzaSyAyC6UrcaRrHRlXIhA0ZoZJ7O_bqA7qS5s',
+        authDomain: 'quadraticeqn-b0021.firebaseapp.com',
+        databaseURL: 'https://quadraticeqn-b0021-default-rtdb.firebaseio.com',
+        projectId: 'quadraticeqn-b0021',
+        storageBucket: 'quadraticeqn-b0021.firebasestorage.app',
+        messagingSenderId: '112828185217',
+        appId: '1:112828185217:web:cd58a762c5720f062d6b80',
+        measurementId: 'G-LK4YH1R9W3'
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+    const googleProvider = new GoogleAuthProvider();
+    googleProvider.setCustomParameters({ prompt: 'select_account' });
+
+    const adminEmailInput = document.getElementById('adminEmail');
+    const adminPasswordInput = document.getElementById('adminPassword');
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    const adminGoogleBtn = document.getElementById('adminGoogleBtn');
+    const adminSignOutBtn = document.getElementById('adminSignOutBtn');
+    const adminMessage = document.getElementById('adminMessage');
+    const authGate = document.getElementById('authGate');
+    const adminContent = document.getElementById('adminContent');
+    const adminScoreFilter = document.getElementById('adminScoreFilter');
+    const adminScoreList = document.getElementById('adminScoreList');
+    const deletionRequestsList = document.getElementById('deletionRequestsList');
+    let currentUser = null;
+
+    function setMessage(message, isError = false) {
+        if (!adminMessage) return;
+        adminMessage.textContent = message;
+        adminMessage.style.color = isError ? '#dc2626' : '#475569';
+    }
+
+    async function handleEmailAuth(mode) {
+        const email = (adminEmailInput?.value || '').trim();
+        const password = adminPasswordInput?.value || '';
+        if (!email || !password) {
+            setMessage('Please enter an email and password.', true);
+            return;
+        }
+        try {
+            const userCredential = mode === 'login'
+                ? await signInWithEmailAndPassword(auth, email, password)
+                : await createUserWithEmailAndPassword(auth, email, password);
+            currentUser = userCredential.user;
+        } catch (error) {
+            console.error(error);
+            setMessage(error?.message || 'Unable to sign in.', true);
+        }
+    }
+
+    async function handleGoogleAuth() {
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            currentUser = result.user;
+        } catch (error) {
+            console.error(error);
+            setMessage(error?.message || 'Google sign-in failed.', true);
+        }
+    }
+
+    async function loadAdminData() {
+        if (!adminScoreList || !deletionRequestsList) return;
+        try {
+            const [usersSnap, requestsSnap] = await Promise.all([
+                get(ref(db, 'users')),
+                get(ref(db, 'deletionRequests'))
+            ]);
+
+            const rows = [];
+            const usersData = usersSnap.exists() ? usersSnap.val() : {};
+            Object.entries(usersData).forEach(([uid, userData]) => {
+                const profile = userData?.profile || {};
+                const history = userData?.scoreHistory || {};
+                Object.entries(history).forEach(([historyKey, entry]) => {
+                    rows.push({
+                        uid,
+                        historyKey,
+                        email: profile?.email || 'Unknown user',
+                        score: entry?.score ?? 0,
+                        songTitle: entry?.songTitle || 'Untitled score',
+                        recordedAt: entry?.recordedAt || ''
+                    });
+                });
+            });
+
+            const filterValue = (adminScoreFilter?.value || '').trim().toLowerCase();
+            const filteredRows = rows.filter(row => {
+                if (!filterValue) return true;
+                return [row.email, row.songTitle, String(row.score)].some(value => value.toLowerCase().includes(filterValue));
+            }).sort((a, b) => new Date(b.recordedAt || 0) - new Date(a.recordedAt || 0));
+
+            adminScoreList.innerHTML = filteredRows.length
+                ? filteredRows.map(row => `
+                    <div class="card" style="margin-bottom:0;">
+                        <strong>${row.songTitle}</strong>
+                        <div class="muted">${row.email}</div>
+                        <div class="pill">Score: ${row.score}</div>
+                        <div class="muted">${row.recordedAt ? new Date(row.recordedAt).toLocaleString() : 'Unknown time'}</div>
+                    </div>
+                `).join('')
+                : '<div class="muted">No score entries found.</div>';
+
+            deletionRequestsList.innerHTML = requestsSnap.exists()
+                ? Object.entries(requestsSnap.val()).map(([key, request]) => `
+                    <div class="card" style="margin-bottom:0;">
+                        <strong>${request.email || 'Unknown user'}</strong>
+                        <div class="muted">${request.reason || 'No reason provided'}</div>
+                        <div class="pill">Status: ${request.status || 'pending'}</div>
+                        <div class="muted">${request.requestedAt ? new Date(request.requestedAt).toLocaleString() : 'Unknown time'}</div>
+                    </div>
+                `).join('')
+                : '<div class="muted">No deletion requests yet.</div>';
+        } catch (error) {
+            console.error(error);
+            adminScoreList.innerHTML = '<div class="muted">Unable to load admin data.</div>';
+            deletionRequestsList.innerHTML = '<div class="muted">Unable to load deletion requests.</div>';
+        }
+    }
+
+    function showAuthorizedView(user) {
+        if (!authGate || !adminContent || !adminSignOutBtn) return;
+        const isAuthorized = user?.email?.toLowerCase() === AUTHORIZED_EMAIL?.toLowerCase();
+        authGate.classList.add('hidden');
+        adminContent.classList.remove('hidden');
+        adminSignOutBtn.classList.remove('hidden');
+        if (isAuthorized) {
+            setMessage(`Signed in as ${user.email}`);
+            loadAdminData();
+        } else {
+            setMessage('Signed in, but this account is not authorized for the admin panel.', true);
+            adminContent.classList.add('hidden');
+        }
+    }
+
+    function showGuestView() {
+        if (!authGate || !adminContent || !adminSignOutBtn) return;
+        authGate.classList.remove('hidden');
+        adminContent.classList.add('hidden');
+        adminSignOutBtn.classList.add('hidden');
+        setMessage('Please sign in with the authorized admin account.');
+    }
+
+    adminLoginBtn?.addEventListener('click', () => handleEmailAuth('login'));
+    adminGoogleBtn?.addEventListener('click', handleGoogleAuth);
+    adminSignOutBtn?.addEventListener('click', async () => {
+        await signOut(auth);
+        currentUser = null;
+        showGuestView();
+    });
+    adminScoreFilter?.addEventListener('input', loadAdminData);
+
+    onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        if (user) {
+            showAuthorizedView(user);
+        } else {
+            showGuestView();
+        }
+    });
+    </script>
+</body>
+</html>

@@ -123,6 +123,11 @@ async function exchangeCodeForToken(code, state) {
         localStorage.setItem(DROPBOX_CONFIG.storage.tokenExpiry, expiryTime.toString());
 
         console.log('[OAUTH] ✓ Token exchange successful');
+        if (window.location.pathname.includes('admin.html')) {
+            window.history.replaceState({}, '', './admin.html');
+        } else {
+            window.history.replaceState({}, '', './admin.html');
+        }
         return data.access_token;
     } catch (error) {
         console.error('[OAUTH] Token exchange error:', error);

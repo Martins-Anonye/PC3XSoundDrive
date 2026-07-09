@@ -5,14 +5,15 @@ const NAVIGATION_CONFIG = {
     // Main App Pages
     pages: {
         index: './index.html',
+        admin: './admin.html',
         auth: './auth.html',
         oauthCallback: './oauth-callback.html',
     },
     
     // OAuth Redirects
     oauth: {
-        successRedirect: './index.html?oauth=success',
-        errorBackToApp: './index.html',
+        successRedirect: './admin.html?oauth=success',
+        errorBackToApp: './admin.html',
     },
     
     // Auth Redirects

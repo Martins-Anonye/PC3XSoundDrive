@@ -14,9 +14,10 @@ const DROPBOX_CONFIG = {
     
     // Redirect URIs (must match Dropbox Console settings)
     redirectUri: (() => {
-        // Automatically detect redirect URI based on current location
-        return window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/oauth-callback.html';
+        const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+        return `${baseUrl}/oauth-callback.html`;
     })(),
+    adminRedirectPath: '/admin.html',
     
     // API Endpoints
     api: {
